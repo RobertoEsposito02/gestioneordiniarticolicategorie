@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 
 public class CategoriaDAOImpl implements CategoriaDAO{
@@ -26,25 +27,30 @@ public class CategoriaDAOImpl implements CategoriaDAO{
 
 	@Override
 	public Categoria get(Long id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return entityManager.find(Categoria.class, id);
 	}
 
 	@Override
-	public void update(Categoria o) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void update(Categoria input) throws Exception {
+		if (input == null) {
+			throw new Exception("input non valido");
+		}
+		input = entityManager.merge(input);
 	}
 
 	@Override
-	public void insert(Categoria o) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void insert(Categoria input) throws Exception {
+		if (input == null) {
+			throw new Exception("input non valido");
+		}
+		entityManager.persist(input);
 	}
 
 	@Override
-	public void delete(Categoria o) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void delete(Categoria input) throws Exception {
+		if (input == null) {
+			throw new Exception("input non valido");
+		}
+		entityManager.remove(entityManager.merge(input));
 	}
 }

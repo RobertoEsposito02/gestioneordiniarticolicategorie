@@ -35,10 +35,9 @@ public class Ordine {
 	public Ordine() {
 	}
 
-	public Ordine(String nomeDestinatario, String indirizzoSpedizione, Date dataSpedizione, Date dataScadenza) {
+	public Ordine(String nomeDestinatario, String indirizzoSpedizione, Date dataScadenza) {
 		this.nomeDestinatario = nomeDestinatario;
 		this.indirizzoSpedizione = indirizzoSpedizione;
-		this.dataSpedizione = dataSpedizione;
 		this.dataScadenza = dataScadenza;
 	}
 

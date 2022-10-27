@@ -9,4 +9,15 @@ public interface OrdineService {
 	public void setOrdineDAO(OrdineDAO ordineDAO);
 	
 	public List<Ordine> listAll() throws Exception;
+	
+	public Ordine caricaSingoloElemento(Long id) throws Exception;
+	
+	public Ordine caricaSingoloElementoEagerGeneri(Long id) throws Exception;
+
+	public void aggiorna(Ordine ordineInstance) throws Exception;
+
+	public void inserisciNuovo(Ordine ordineInstance) throws Exception;
+
+	public void rimuovi(Long idOrdine) throws Exception;
+
 }
