@@ -14,7 +14,7 @@ public interface CategoriaService {
 	
 	public Categoria caricaSingoloElemento(Long id) throws Exception;
 	
-	public Categoria caricaSingoloElementoEagerGeneri(Long id) throws Exception;
+	public Categoria caricaSingoloElementoEager(Long id) throws Exception;
 
 	public void aggiorna(Categoria categoriaInstance) throws Exception;
 

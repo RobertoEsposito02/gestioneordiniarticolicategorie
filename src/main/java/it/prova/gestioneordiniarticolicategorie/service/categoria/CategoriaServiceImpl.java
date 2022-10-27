@@ -49,9 +49,18 @@ public class CategoriaServiceImpl implements CategoriaService{
 	}
 
 	@Override
-	public Categoria caricaSingoloElementoEagerGeneri(Long id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Categoria caricaSingoloElementoEager(Long id) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+			
+			categoriaDAO.setEntityManager(entityManager);
+			
+			return categoriaDAO.findByIdFetchingArticoli(id);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override

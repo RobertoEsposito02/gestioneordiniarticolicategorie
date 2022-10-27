@@ -185,6 +185,9 @@ public class MyTest {
 		
 		categoriaService.aggiungiArticolo(categoriaEsistente, articoloEsistente);
 		
+		Categoria categoriaReloaded = categoriaService.caricaSingoloElementoEager(categoriaEsistente.getId());
+		if(categoriaReloaded.getArticoli().isEmpty())
+			throw new RuntimeException("testAggiungiArticoloEsistenteACategoriaEsistente: FALLITO record non collegati");
 		
 		System.out.println("-------------testAggiungiArticoloEsistenteACategoriaEsistente PASSED-----------");
 	}
