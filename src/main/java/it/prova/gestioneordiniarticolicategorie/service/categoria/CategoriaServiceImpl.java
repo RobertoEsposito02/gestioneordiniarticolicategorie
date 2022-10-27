@@ -141,5 +141,24 @@ public class CategoriaServiceImpl implements CategoriaService{
 		}
 	}
 
-	
+	@Override
+	public void disassociaCategoriaArticolo(Long idCategoria) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			entityManager.getTransaction().begin();
+
+			categoriaDAO.setEntityManager(entityManager);
+
+			categoriaDAO.disissocia(idCategoria);
+			
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
 }

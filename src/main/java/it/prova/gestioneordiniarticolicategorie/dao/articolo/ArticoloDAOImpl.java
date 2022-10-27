@@ -3,9 +3,9 @@ package it.prova.gestioneordiniarticolicategorie.dao.articolo;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import it.prova.gestioneordiniarticolicategorie.model.Articolo;
-import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
 public class ArticoloDAOImpl implements ArticoloDAO{
 
@@ -54,4 +54,18 @@ public class ArticoloDAOImpl implements ArticoloDAO{
 		entityManager.remove(entityManager.merge(input));
 	}
 
+	@Override
+	public void scollegaArticoloCategoria(Long idArticolo) throws Exception {
+		entityManager.createNativeQuery("delete from categoria_articolo where articolo_id = :articoloID").setParameter("articoloID", idArticolo).executeUpdate();
+	}
+	
+	@Override
+	public Articolo findByFetchingCategorie(Long idLong) throws Exception {
+		TypedQuery<Articolo> query = entityManager
+				.createQuery("select a FROM Articolo a left join fetch a.categorie c where a.id = :idArticolo", Articolo.class);
+		query.setParameter("idArticolo", idLong);
+		return query.getResultList().stream().findFirst().orElse(null);
+	}
+	
+	
 }

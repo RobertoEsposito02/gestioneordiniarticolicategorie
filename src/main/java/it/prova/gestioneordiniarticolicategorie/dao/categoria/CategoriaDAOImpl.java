@@ -3,8 +3,8 @@ package it.prova.gestioneordiniarticolicategorie.dao.categoria;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
-import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 
 public class CategoriaDAOImpl implements CategoriaDAO{
@@ -52,5 +52,18 @@ public class CategoriaDAOImpl implements CategoriaDAO{
 			throw new Exception("input non valido");
 		}
 		entityManager.remove(entityManager.merge(input));
+	}
+
+	@Override
+	public void disissocia(Long idCategoria) throws Exception {
+		entityManager.createNativeQuery("delete from categoria_articolo where categoria_id = :categoriaID").setParameter("categoriaID", idCategoria).executeUpdate();
+	}
+
+	@Override
+	public Categoria findByIdFetchingArticoli(Long id) throws Exception {
+		TypedQuery<Categoria> query = entityManager
+				.createQuery("select c FROM Categoria c left join fetch c.articoli a where c.id = :idCategoria", Categoria.class);
+		query.setParameter("idCategoria", id);
+		return query.getResultList().stream().findFirst().orElse(null);
 	}
 }

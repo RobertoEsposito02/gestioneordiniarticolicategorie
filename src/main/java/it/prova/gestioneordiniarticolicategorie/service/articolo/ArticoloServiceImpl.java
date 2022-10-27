@@ -50,12 +50,6 @@ public class ArticoloServiceImpl implements ArticoloService{
 	}
 
 	@Override
-	public Articolo caricaSingoloElementoEagerGeneri(Long id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void aggiorna(Articolo articoloInstance) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
@@ -143,7 +137,30 @@ public class ArticoloServiceImpl implements ArticoloService{
 	}
 
 	@Override
-	public void scollegaOrdine(Ordine ordine, Articolo articolo) throws Exception {
+	public void aggiungiCategoria(Categoria categoria, Articolo articolo) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+			entityManager.getTransaction().begin();
+
+			articoloDAO.setEntityManager(entityManager);
+
+			articolo = entityManager.merge(articolo);
+			categoria = entityManager.merge(categoria);
+
+			categoria.addToArticoli(articolo);
+
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public void disassocia(Long idArticolo) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
 		try {
@@ -151,10 +168,7 @@ public class ArticoloServiceImpl implements ArticoloService{
 
 			articoloDAO.setEntityManager(entityManager);
 
-			articolo = entityManager.merge(articolo);
-			ordine = entityManager.merge(ordine);
-			
-			//articolo.getOrdine()
+			articoloDAO.scollegaArticoloCategoria(idArticolo);
 			
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {
@@ -167,9 +181,20 @@ public class ArticoloServiceImpl implements ArticoloService{
 	}
 
 	@Override
-	public void aggiungiCategoria(Categoria categoria, Articolo articolo) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public Articolo caricaSingoloElementoEager(Long idLong) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			articoloDAO.setEntityManager(entityManager);
+
+			return articoloDAO.findByFetchingCategorie(idLong);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
 	}
 
 }

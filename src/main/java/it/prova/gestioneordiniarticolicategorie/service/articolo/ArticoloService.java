@@ -14,8 +14,6 @@ public interface ArticoloService {
 	
 	public Articolo caricaSingoloElemento(Long id) throws Exception;
 	
-	public Articolo caricaSingoloElementoEagerGeneri(Long id) throws Exception;
-
 	public void aggiorna(Articolo articoloInstance) throws Exception;
 
 	public void inserisciNuovo(Articolo articoloInstance) throws Exception;
@@ -24,7 +22,9 @@ public interface ArticoloService {
 	
 	public void collegaOrdine(Ordine ordine, Articolo articolo) throws Exception;
 	
-	public void scollegaOrdine(Ordine ordine, Articolo articolo) throws Exception;
-	
 	public void aggiungiCategoria(Categoria categoria, Articolo articolo) throws Exception;
+	
+	public void disassocia(Long idArticolo) throws Exception;
+	
+	public Articolo caricaSingoloElementoEager(Long idLong) throws Exception;
 }

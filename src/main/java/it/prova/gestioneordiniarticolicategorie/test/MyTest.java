@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import it.prova.gestioneordiniarticolicategorie.dao.EntityManagerUtil;
+import it.prova.gestioneordiniarticolicategorie.exception.OrdineConArticoliAssociatiException;
 import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
@@ -34,13 +35,23 @@ public class MyTest {
 			
 			testCollegaArticoloAOrdineEsistene(ordineService, articoloService);
 			
+			testRimozioneArticoloLegatoAOrdineMaNonACategoria(ordineService, articoloService);
 			
+			testInserimentoArticolo(articoloService, ordineService);
 			
 			testInserimentoCategoria(categoriaService);
 			
 			testAggiornamentoCategoria(categoriaService);
 			
 			testAggiungiArticoloEsistenteACategoriaEsistente(articoloService, categoriaService);
+			
+			testAggiungiCategoriaEsistenteAdArticoloEsistente(articoloService, categoriaService);
+			
+			testRimozioneArticolo(articoloService);
+			
+			testRimozioneOrdine(ordineService);
+			
+			testRimozioneCategoria(categoriaService);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,6 +75,9 @@ public class MyTest {
 
 	private static void testAggiornamentoOrdine(OrdineService ordineServiceInstance) throws Exception {
 		System.out.println("-------------testAggiornamentoOrdine INIZIO-----------");
+
+		if(ordineServiceInstance.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneOrdine: FALLITO non ci sono ordini nel DB");
 
 		Ordine ordineEsistente = ordineServiceInstance.listAll().get(0);
 		Date dataSpedizione = new SimpleDateFormat("yyyy/MM/dd").parse("2023/01/01");
@@ -92,6 +106,9 @@ public class MyTest {
 	private static void testAggiornamentoArticolo(ArticoloService articoloServiceInstance) throws Exception {
 		System.out.println("-------------testAggiornamentoArticolo INIZIO-----------");
 
+		if(articoloServiceInstance.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneOrdine: FALLITO non ci sono articoli nel DB");
+
 		Articolo articoloEsistente = articoloServiceInstance.listAll().get(0);
 		articoloEsistente.setDescrizione("articolo2");
 		articoloServiceInstance.aggiorna(articoloEsistente);
@@ -106,6 +123,9 @@ public class MyTest {
 				new SimpleDateFormat("yyyy/MM/dd").parse("2023/02/20"));
 		ordineServiceInstance.inserisciNuovo(nuovoOrdineTestCollegaArticoloAOrdineEsistente);
 		
+		if(articoloServiceInstance.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneOrdine: FALLITO non ci sono articoli nel DB");
+		
 		Articolo articoloEsistenteTestCollegaArticoloAOrdineEsistente = articoloServiceInstance.listAll().get(0);
 		
 		articoloServiceInstance.collegaOrdine(nuovoOrdineTestCollegaArticoloAOrdineEsistente, articoloEsistenteTestCollegaArticoloAOrdineEsistente);
@@ -113,19 +133,18 @@ public class MyTest {
 		System.out.println("-------------testCollegaArticoloAOrdineEsistene PASSED-----------");
 	}
 	
-	private static void testScollegaArticoloDaOrdineEsistente(OrdineService ordineServiceInstance, ArticoloService articoloServiceInstance) throws Exception{
+	private static void testRimozioneArticoloLegatoAOrdineMaNonACategoria(OrdineService ordineServiceInstance, ArticoloService articoloServiceInstance) throws Exception{
 		System.out.println("-------------testScollegaArticoloDaOrdineEsistente INIZIO-----------");
 		
-		Articolo nuovoArticolo = articoloServiceInstance.listAll().get(0);
+		if(articoloServiceInstance.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneOrdine: FALLITO non ci sono articoli nel DB");
 		
+		Articolo nuovoArticolo = articoloServiceInstance.listAll().get(0);
 		
 		articoloServiceInstance.rimuovi(nuovoArticolo.getId());
 		
 		System.out.println("-------------testScollegaArticoloDaOrdineEsistente PASSED-----------");
 	}
-	
-	
-	
 	
 	private static void testInserimentoCategoria(CategoriaService categoriaService) throws Exception{
 		System.out.println("-------------testInserisciCategoria INIZIO-----------");
@@ -141,6 +160,9 @@ public class MyTest {
 	private static void testAggiornamentoCategoria(CategoriaService categoriaService) throws Exception{
 		System.out.println("-------------testAggiornamentoCategoria INIZIO-----------");
 		
+		if(categoriaService.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneOrdine: FALLITO non ci sono articoli nel DB");
+		
 		Categoria categoriaEsistente = categoriaService.listAll().get(0);
 		categoriaEsistente.setDescrizione("nuovaDescrizione");
 		categoriaService.aggiorna(categoriaEsistente);
@@ -151,7 +173,13 @@ public class MyTest {
 	private static void testAggiungiArticoloEsistenteACategoriaEsistente(ArticoloService articoloService, CategoriaService categoriaService) throws Exception{
 		System.out.println("-------------testAggiungiArticoloEsistenteACategoriaEsistente INIZIO-----------");
 		
+		if(categoriaService.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneOrdine: FALLITO non ci sono articoli nel DB");
+		
 		Categoria categoriaEsistente = categoriaService.listAll().get(0);
+		
+		if(articoloService.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneOrdine: FALLITO non ci sono articoli nel DB");
 		
 		Articolo articoloEsistente = articoloService.listAll().get(0);
 		
@@ -164,8 +192,60 @@ public class MyTest {
 	private static void testAggiungiCategoriaEsistenteAdArticoloEsistente(ArticoloService articoloService, CategoriaService categoriaService) throws Exception{
 		System.out.println("-------------testAggiungiCategoriaEsistenteAdArticoloEsistente INIZIO-----------");
 		
+		Categoria categoriaTestAggiungiArticoloACategoria = new Categoria("descrizione1","codice1");
+		categoriaService.inserisciNuovo(categoriaTestAggiungiArticoloACategoria);
+		
+		if(articoloService.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneOrdine: FALLITO non ci sono articoli nel DB");
+		
+		Articolo articoloEsistente = articoloService.listAll().get(0);
+		articoloService.aggiungiCategoria(categoriaTestAggiungiArticoloACategoria, articoloEsistente);
+		
+		Articolo articoloReloaded = articoloService.caricaSingoloElementoEager(articoloEsistente.getId());
+		if(articoloReloaded.getCategorie().isEmpty())
+			throw new RuntimeException("testAggiungiCategoriaEsistenteAdArticoloEsistente: FALLITO collegamento non avvenuto");
 		
 		
 		System.out.println("-------------testAggiungiCategoriaEsistenteAdArticoloEsistente PASSED-----------");
+	}
+	
+	private static void testRimozioneArticolo(ArticoloService articoloService) throws Exception{
+		System.out.println("-------------testRimozioneArticolo INIZIO-----------");
+		
+		if(articoloService.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneOrdine: FALLITO non ci sono articoli nel DB");
+		
+		Articolo articoloEsistente = articoloService.listAll().get(0);
+		articoloService.disassocia(articoloEsistente.getId());
+		articoloService.rimuovi(articoloEsistente.getId());
+		
+		System.out.println("-------------testRimozioneArticolo PASSED-----------");
+	}
+	
+	private static void testRimozioneOrdine(OrdineService ordineService) throws Exception{
+		System.out.println("-------------testRimozioneOrdine INIZIO-----------");
+		
+		if(ordineService.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneOrdine: FALLITO non ci sono ordini nel DB");
+		
+		Ordine ordineEsistente = ordineService.listAll().get(0);
+		if(!(ordineEsistente.getArticoli().isEmpty()))
+			throw new OrdineConArticoliAssociatiException("testRimozioneOrdine: FALLITO impossibile eliminare un ordine se ha articoli collegati");
+		
+		ordineService.rimuovi(ordineEsistente.getId());
+		
+		System.out.println("-------------testRimozioneOrdine PASSED-----------");
+	}
+	
+	private static void testRimozioneCategoria(CategoriaService categoriaService) throws Exception{
+		System.out.println("-------------testRimozioneCategoria INIZIO-----------");
+		
+		if(categoriaService.listAll().size() < 1)
+			throw new RuntimeException("testRimozioneCategoria: FALLITO non ci sono categorie nel DB");
+		
+		Categoria categoriaEsistente = categoriaService.listAll().get(0);
+		categoriaService.rimuovi(categoriaEsistente.getId());
+		
+		System.out.println("-------------testRimozioneCategoria PASSED-----------");
 	}
 }

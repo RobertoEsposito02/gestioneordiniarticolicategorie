@@ -23,4 +23,6 @@ public interface CategoriaService {
 	public void rimuovi(Long idCategoria) throws Exception;
 	
 	public void aggiungiArticolo(Categoria categoria, Articolo articolo) throws Exception;
+	
+	public void disassociaCategoriaArticolo(Long idCategoria) throws Exception;
 }

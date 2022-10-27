@@ -97,4 +97,13 @@ public class Articolo {
 	public void setOrdine(Ordine ordine) {
 		this.ordine = ordine;
 	}
+
+	public Set<Categoria> getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(Set<Categoria> categorie) {
+		this.categorie = categorie;
+	}
+	
 }
