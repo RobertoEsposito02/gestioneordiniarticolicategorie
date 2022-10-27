@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+        version="2.2">
+	<persistence-unit name="gestioneordiniarticolicategorie_unit" transaction-type="RESOURCE_LOCAL">
+		<class>it.prova.gestioneordiniarticolicategorie.model.Ordine</class>
+		<class>it.prova.gestioneordiniarticolicategorie.model.Articolo</class>
+		<class>it.prova.gestioneordiniarticolicategorie.model.Categoria</class>
+		<properties>
+			<!-- setup con MySql -->
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/gestioneordiniarticolicategorie?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true"/>
+			<property name="javax.persistence.jdbc.user" value="root"/>
+			<property name="javax.persistence.jdbc.password" value="root"/>
+			
+			
+			<!-- setup con H2 
+			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
+			-->
+			<!-- viene creato un file "C:\Users\mio_utente_su_windows\gestionemunicipioreverse.mv.db" -->
+			<!--
+			<property name="javax.persistence.jdbc.url"    value="jdbc:h2:tcp://localhost/~/gestionemunicipioreverse" />
+			<property name="javax.persistence.jdbc.user" value="sa" />
+			<property name="javax.persistence.jdbc.password" value="" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+			-->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+			<property name="hibernate.connection.pool_size" value="10"/>
+			
+			<property name="hibernate.show_sql" value="true"/>
+			<!-- create-drop,create,update,validate -->
+			<property name="hibernate.hbm2ddl.auto" value=""/>
+		</properties>
+	</persistence-unit>
+</persistence>
