@@ -25,4 +25,8 @@ public interface CategoriaService {
 	public void aggiungiArticolo(Categoria categoria, Articolo articolo) throws Exception;
 	
 	public void disassociaCategoriaArticolo(Long idCategoria) throws Exception;
+	
+	public List<Ordine> trovaTuttiGliOrdiniAppartenentiAdUnaCategoria(Categoria categoria) throws Exception;
+	
+	public List<Categoria> trovaTutteLeCategorieDistinreDaUnOrdine(Ordine ordine) throws Exception;
 }
