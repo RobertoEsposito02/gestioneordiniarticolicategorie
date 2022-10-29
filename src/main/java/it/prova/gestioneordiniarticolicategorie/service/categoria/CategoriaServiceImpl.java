@@ -203,4 +203,20 @@ public class CategoriaServiceImpl implements CategoriaService{
 			EntityManagerUtil.closeEntityManager(entityManager);
 		}
 	}
+
+	@Override
+	public Long trovaLaSommaDelPrezzoDiTuttiGliArticoliDiUnaCategoria(Categoria categoria) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			categoriaDAO.setEntityManager(entityManager);
+
+			return categoriaDAO.findTheTotalSumOfTheArticoliDiUnaCategoria(categoria);	
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
 }

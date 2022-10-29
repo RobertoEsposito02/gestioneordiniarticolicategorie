@@ -87,4 +87,11 @@ public class CategoriaDAOImpl implements CategoriaDAO {
 		query.setParameter("ordine", ordine);
 		return query.getResultList();
 	}
+
+	@Override
+	public Long findTheTotalSumOfTheArticoliDiUnaCategoria(Categoria categoria) throws Exception {
+		TypedQuery<Long> query = entityManager.createQuery("select sum(a.prezzoSingolo) from Articolo a join a.categorie c where c = :categoria", Long.class);
+		query.setParameter("categoria", categoria);
+		return query.getSingleResult().longValue();
+	}
 }

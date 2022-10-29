@@ -29,4 +29,6 @@ public interface CategoriaService {
 	public List<Ordine> trovaTuttiGliOrdiniAppartenentiAdUnaCategoria(Categoria categoria) throws Exception;
 	
 	public List<Categoria> trovaTutteLeCategorieDistinreDaUnOrdine(Ordine ordine) throws Exception;
+	
+	public Long trovaLaSommaDelPrezzoDiTuttiGliArticoliDiUnaCategoria(Categoria categoria) throws Exception;
 }

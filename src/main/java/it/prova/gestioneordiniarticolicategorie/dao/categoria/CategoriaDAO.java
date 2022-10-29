@@ -14,4 +14,6 @@ public interface CategoriaDAO extends IBaseDAO<Categoria>{
 	public List<Ordine> findAllOrdiniByCategoria(Categoria categoria) throws Exception;
 	
 	public List<Categoria> findAllDistinctCategorieFromOrdine(Ordine ordine) throws Exception;
+	
+	public Long findTheTotalSumOfTheArticoliDiUnaCategoria(Categoria categoria) throws Exception;
 }

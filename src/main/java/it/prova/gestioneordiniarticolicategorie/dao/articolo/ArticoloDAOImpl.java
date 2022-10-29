@@ -66,6 +66,4 @@ public class ArticoloDAOImpl implements ArticoloDAO{
 		query.setParameter("idArticolo", idLong);
 		return query.getResultList().stream().findFirst().orElse(null);
 	}
-	
-	
 }

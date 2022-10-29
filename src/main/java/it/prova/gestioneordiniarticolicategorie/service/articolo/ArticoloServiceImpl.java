@@ -196,5 +196,4 @@ public class ArticoloServiceImpl implements ArticoloService{
 			EntityManagerUtil.closeEntityManager(entityManager);
 		}
 	}
-
 }
