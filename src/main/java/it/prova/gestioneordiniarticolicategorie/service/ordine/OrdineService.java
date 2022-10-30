@@ -22,5 +22,7 @@ public interface OrdineService {
 	public void rimuovi(Long idOrdine) throws Exception;
 	
 	public Ordine trovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria(Categoria categoria) throws Exception;
+	
+	public List<String> trovaGliIndirizziDiOrdiniCheHannoArticoliIlCuiNumeroSerialeIniziaCon(String input) throws Exception;
 
 }

@@ -8,14 +8,14 @@ import javax.persistence.TypedQuery;
 import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
-public class OrdineDAOImpl implements OrdineDAO{
+public class OrdineDAOImpl implements OrdineDAO {
 
 	private EntityManager entityManager;
-	
+
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
-	
+
 	@Override
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -57,8 +57,20 @@ public class OrdineDAOImpl implements OrdineDAO{
 
 	@Override
 	public Ordine findLOrdinePiuRecenteSpeditoDiUnaCategoria(Categoria categoria) throws Exception {
-		TypedQuery<Ordine> query = entityManager.createQuery("select o from Ordine o join o.articoli a join a.categorie c where c = :categoria order by o.dataSpedizione asc",Ordine.class);
+		TypedQuery<Ordine> query = entityManager.createQuery(
+				"select o from Ordine o join o.articoli a join a.categorie c where c = :categoria order by o.dataSpedizione asc",
+				Ordine.class);
 		query.setParameter("categoria", categoria);
 		return query.setMaxResults(1).getSingleResult();
+	}
+
+	@Override
+	public List<String> findAllIndirizziDiOrdiniCheHannoArticoliConIlNumeroSerialeCheIniziaCon(String input)
+			throws Exception {
+		TypedQuery<String> query = entityManager.createQuery(
+				"select distinct o.indirizzoSpedizione from Ordine o join o.articoli a where a.numeroSeriale like :numeroseriale",
+				String.class);
+		query.setParameter("numeroseriale", input + "%");
+		return query.getResultList();
 	}
 }

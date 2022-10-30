@@ -9,7 +9,7 @@ import it.prova.gestioneordiniarticolicategorie.dao.ordine.OrdineDAO;
 import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
-public class OrdineServiceImpl implements OrdineService{
+public class OrdineServiceImpl implements OrdineService {
 	private OrdineDAO ordineDAO;
 
 	@Override
@@ -21,11 +21,11 @@ public class OrdineServiceImpl implements OrdineService{
 	public List<Ordine> listAll() throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
-			
+
 			ordineDAO.setEntityManager(entityManager);
-			
+
 			return ordineDAO.list();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -36,11 +36,11 @@ public class OrdineServiceImpl implements OrdineService{
 	public Ordine caricaSingoloElemento(Long id) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
-			
+
 			ordineDAO.setEntityManager(entityManager);
-			
+
 			return ordineDAO.get(id);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -124,6 +124,23 @@ public class OrdineServiceImpl implements OrdineService{
 			ordineDAO.setEntityManager(entityManager);
 
 			return ordineDAO.findLOrdinePiuRecenteSpeditoDiUnaCategoria(categoria);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public List<String> trovaGliIndirizziDiOrdiniCheHannoArticoliIlCuiNumeroSerialeIniziaCon(String input)
+			throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			ordineDAO.setEntityManager(entityManager);
+
+			return ordineDAO.findAllIndirizziDiOrdiniCheHannoArticoliConIlNumeroSerialeCheIniziaCon(input);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

@@ -6,15 +6,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import it.prova.gestioneordiniarticolicategorie.model.Articolo;
+import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
-public class ArticoloDAOImpl implements ArticoloDAO{
+public class ArticoloDAOImpl implements ArticoloDAO {
 
 	private EntityManager entityManager;
-	
+
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
-	
+
 	@Override
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -56,14 +57,24 @@ public class ArticoloDAOImpl implements ArticoloDAO{
 
 	@Override
 	public void scollegaArticoloCategoria(Long idArticolo) throws Exception {
-		entityManager.createNativeQuery("delete from categoria_articolo where articolo_id = :articoloID").setParameter("articoloID", idArticolo).executeUpdate();
+		entityManager.createNativeQuery("delete from categoria_articolo where articolo_id = :articoloID")
+				.setParameter("articoloID", idArticolo).executeUpdate();
 	}
-	
+
 	@Override
 	public Articolo findByFetchingCategorie(Long idLong) throws Exception {
-		TypedQuery<Articolo> query = entityManager
-				.createQuery("select a FROM Articolo a left join fetch a.categorie c where a.id = :idArticolo", Articolo.class);
+		TypedQuery<Articolo> query = entityManager.createQuery(
+				"select a FROM Articolo a left join fetch a.categorie c where a.id = :idArticolo", Articolo.class);
 		query.setParameter("idArticolo", idLong);
 		return query.getResultList().stream().findFirst().orElse(null);
+	}
+
+	@Override
+	public Long findAllPrezziDiArticoliDiUnDestinatario(Ordine ordine) throws Exception {
+		TypedQuery<Long> query = entityManager.createQuery(
+				"select sum(a.prezzoSingolo) from Articolo a join a.ordine where nomedestinatario = :nomedestinatario",
+				Long.class);
+		query.setParameter("nomedestinatario", ordine.getNomeDestinatario());
+		return query.getSingleResult().longValue();
 	}
 }

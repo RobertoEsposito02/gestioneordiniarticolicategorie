@@ -10,10 +10,10 @@ import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
-public class ArticoloServiceImpl implements ArticoloService{
+public class ArticoloServiceImpl implements ArticoloService {
 
 	private ArticoloDAO articoloDAO;
-	
+
 	@Override
 	public void setArticoloDAO(ArticoloDAO articoloDAO) {
 		this.articoloDAO = articoloDAO;
@@ -23,11 +23,11 @@ public class ArticoloServiceImpl implements ArticoloService{
 	public List<Articolo> listAll() throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
-			
+
 			articoloDAO.setEntityManager(entityManager);
-			
+
 			return articoloDAO.list();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -38,11 +38,11 @@ public class ArticoloServiceImpl implements ArticoloService{
 	public Articolo caricaSingoloElemento(Long id) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
-			
+
 			articoloDAO.setEntityManager(entityManager);
-			
+
 			return articoloDAO.get(id);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -123,9 +123,9 @@ public class ArticoloServiceImpl implements ArticoloService{
 
 			articolo = entityManager.merge(articolo);
 			ordine = entityManager.merge(ordine);
-			
+
 			articolo.setOrdine(ordine);
-			
+
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {
 			entityManager.getTransaction().rollback();
@@ -169,7 +169,7 @@ public class ArticoloServiceImpl implements ArticoloService{
 			articoloDAO.setEntityManager(entityManager);
 
 			articoloDAO.scollegaArticoloCategoria(idArticolo);
-			
+
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {
 			entityManager.getTransaction().rollback();
@@ -188,6 +188,23 @@ public class ArticoloServiceImpl implements ArticoloService{
 			articoloDAO.setEntityManager(entityManager);
 
 			return articoloDAO.findByFetchingCategorie(idLong);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public Long trovaIlTotaleDeiPrezziDiArticoliDiUnDestinatario(Ordine ordine) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			articoloDAO.setEntityManager(entityManager);
+
+			return articoloDAO.findAllPrezziDiArticoliDiUnDestinatario(ordine);
 
 		} catch (Exception e) {
 			e.printStackTrace();

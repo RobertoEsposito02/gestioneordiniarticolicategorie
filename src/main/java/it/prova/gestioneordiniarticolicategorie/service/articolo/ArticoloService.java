@@ -27,4 +27,6 @@ public interface ArticoloService {
 	public void disassocia(Long idArticolo) throws Exception;
 	
 	public Articolo caricaSingoloElementoEager(Long idLong) throws Exception;
+	
+	public Long trovaIlTotaleDeiPrezziDiArticoliDiUnDestinatario(Ordine ordine) throws Exception;
 }
