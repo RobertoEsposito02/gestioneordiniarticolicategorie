@@ -3,7 +3,9 @@ package it.prova.gestioneordiniarticolicategorie.dao.ordine;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
+import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
 public class OrdineDAOImpl implements OrdineDAO{
@@ -51,5 +53,12 @@ public class OrdineDAOImpl implements OrdineDAO{
 			throw new Exception("input non valido");
 		}
 		entityManager.remove(entityManager.merge(input));
+	}
+
+	@Override
+	public Ordine findLOrdinePiuRecenteSpeditoDiUnaCategoria(Categoria categoria) throws Exception {
+		TypedQuery<Ordine> query = entityManager.createQuery("select o from Ordine o join o.articoli a join a.categorie c where c = :categoria order by o.dataSpedizione asc",Ordine.class);
+		query.setParameter("categoria", categoria);
+		return query.setMaxResults(1).getSingleResult();
 	}
 }

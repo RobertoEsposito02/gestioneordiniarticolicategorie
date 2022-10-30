@@ -1,5 +1,6 @@
 package it.prova.gestioneordiniarticolicategorie.dao.categoria;
 
+import java.util.Date;
 import java.util.List;
 
 import it.prova.gestioneordiniarticolicategorie.dao.IBaseDAO;
@@ -16,4 +17,6 @@ public interface CategoriaDAO extends IBaseDAO<Categoria>{
 	public List<Categoria> findAllDistinctCategorieFromOrdine(Ordine ordine) throws Exception;
 	
 	public Long findTheTotalSumOfTheArticoliDiUnaCategoria(Categoria categoria) throws Exception;
+	
+	public List<String> findAllCodiciDistintiDiCategorieDiOrdinEffettuatiInUnMese(Date date) throws Exception;
 }

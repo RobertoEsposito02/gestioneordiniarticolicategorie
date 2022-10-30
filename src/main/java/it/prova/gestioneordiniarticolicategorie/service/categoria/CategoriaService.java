@@ -1,5 +1,6 @@
 package it.prova.gestioneordiniarticolicategorie.service.categoria;
 
+import java.util.Date;
 import java.util.List;
 
 import it.prova.gestioneordiniarticolicategorie.dao.categoria.CategoriaDAO;
@@ -31,4 +32,6 @@ public interface CategoriaService {
 	public List<Categoria> trovaTutteLeCategorieDistinreDaUnOrdine(Ordine ordine) throws Exception;
 	
 	public Long trovaLaSommaDelPrezzoDiTuttiGliArticoliDiUnaCategoria(Categoria categoria) throws Exception;
+	
+	public List<String> trovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese(Date date) throws Exception;
 }

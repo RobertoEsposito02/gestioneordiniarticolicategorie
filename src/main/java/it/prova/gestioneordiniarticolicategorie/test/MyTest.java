@@ -60,6 +60,10 @@ public class MyTest {
 			
 			testTrovaLaSommaDelPrezzoDiTuttiGliArticoliDiUnaCategoria(categoriaService, ordineService, articoloService);
 			
+			testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria(categoriaService, ordineService, articoloService);
+			
+			testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese(categoriaService, ordineService, articoloService);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -494,5 +498,168 @@ public class MyTest {
 		categoriaService.rimuovi(nuovaCategoria.getId());
 		
 		System.out.println("-------------testTrovaLaSommaDelPrezzoDiTuttiGliArticoliDiUnaCategoria PASSED-----------");
+	}
+	
+	private static void testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria(CategoriaService categoriaService, OrdineService ordineService, ArticoloService articoloService) throws Exception{
+		System.out.println("-------------testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria INIZIO-----------");
+		
+		/* creazione e inserimento ordine in DB */
+		Ordine nuovoOrdine = new Ordine("Niko Pandetta", "Via mosca 52",
+				new SimpleDateFormat("yyyy/MM/dd").parse("2023/02/20"));
+		nuovoOrdine.setDataSpedizione(new SimpleDateFormat("yyyy/MM/dd").parse("2023/01/01"));
+		ordineService.inserisciNuovo(nuovoOrdine);
+		/* controllo inserimento effettuato correttamente */
+		if (nuovoOrdine.getId() == null)
+			throw new RuntimeException("testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria: FALLITO inserimento ordine non avvenuto");
+
+		/* creazione e inserimento ordine in DB */
+		Ordine nuovoOrdine2 = new Ordine("Gigi Buffon", "Via mosca 52",
+				new SimpleDateFormat("yyyy/MM/dd").parse("2023/02/20"));
+		nuovoOrdine2.setDataSpedizione(new SimpleDateFormat("yyyy/MM/dd").parse("2022/12/24"));
+		ordineService.inserisciNuovo(nuovoOrdine2);
+		/* controllo inserimento effettuato correttamente */
+		if (nuovoOrdine2.getId() == null)
+			throw new RuntimeException("testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria: FALLITO inserimento ordine non avvenuto");
+
+		/* creazione e inserimento articolo in DB */
+		Articolo nuovoArticolo = new Articolo("articolo1", "numeroSeriale1", 21,
+				new SimpleDateFormat("yyyy/MM/dd").parse("2023/01/01"), ordineService.caricaSingoloElemento(nuovoOrdine.getId()));
+		articoloService.inserisciNuovo(nuovoArticolo);
+		/* controllo inserimento effettuato correttamente */
+		if (nuovoArticolo.getId() == null)
+			throw new RuntimeException("testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria: FALLITO inserimento articolo non avvenuto");
+
+		/* creazione e inserimento articolo in DB */
+		Articolo nuovoArticolo2 = new Articolo("articolo2", "numeroSeriale2", 17,
+				new SimpleDateFormat("yyyy/MM/dd").parse("2023/01/01"), ordineService.caricaSingoloElemento(nuovoOrdine2.getId()));
+		articoloService.inserisciNuovo(nuovoArticolo2);
+		/* controllo inserimento effettuato correttamente */
+		if (nuovoArticolo2.getId() == null)
+			throw new RuntimeException("testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria: FALLITO inserimento articolo non avvenuto");
+		
+		/* creazione e inserimento categoria */
+		Categoria nuovaCategoria = new Categoria("descrizione1","codice1");
+		categoriaService.inserisciNuovo(nuovaCategoria);
+		/* controllo inserimento effettuato correttamente */
+		if(nuovaCategoria.getId() == null)
+			throw new RuntimeException("testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria: FALLITO inserimento categoria non riuscito");
+	
+		/* primo collegamento articolo-categoria */
+		categoriaService.aggiungiArticolo(nuovaCategoria, nuovoArticolo);
+		/* controllo aggiunta effettuata correttamente */
+		Categoria categoriaReloaded = categoriaService.caricaSingoloElementoEager(nuovaCategoria.getId());
+		if(categoriaReloaded.getArticoli().isEmpty())
+			throw new RuntimeException("testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria: FALLITO record non collegati");
+
+		/* secondo collegamento articolo-categoria */
+		categoriaService.aggiungiArticolo(nuovaCategoria, nuovoArticolo2);
+		/* controllo aggiunta effettuata correttamente */
+		Categoria categoriaReloaded2 = categoriaService.caricaSingoloElementoEager(nuovaCategoria.getId());
+		if(categoriaReloaded2.getArticoli().isEmpty())
+			throw new RuntimeException("testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria: FALLITO record non collegati");
+	
+		if(ordineService.trovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria(nuovaCategoria) == null)
+			throw new RuntimeException("testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria: FALLITO nessun ordine restituito");
+			
+		/* rimozione articolo */
+		articoloService.disassocia(nuovoArticolo.getId());
+		articoloService.disassocia(nuovoArticolo2.getId());
+		articoloService.rimuovi(nuovoArticolo.getId());
+		articoloService.rimuovi(nuovoArticolo2.getId());
+	
+		/* rimozione ordine */
+		ordineService.rimuovi(nuovoOrdine.getId());
+		ordineService.rimuovi(nuovoOrdine2.getId());
+		
+		/* rimozione categoria */
+		categoriaService.rimuovi(nuovaCategoria.getId());
+		
+		System.out.println("-------------testTrovaLOrdinePiuRecenteInTerminiDiSpedizioneDataUnaCategoria PASSED-----------");
+	}
+	
+	private static void testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese(CategoriaService categoriaService, OrdineService ordineService, ArticoloService articoloService) throws Exception{
+		System.out.println("-------------testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese INIZIO-----------");
+		
+		/* creazione e inserimento ordine in DB */
+		Ordine nuovoOrdine = new Ordine("Niko Pandetta", "Via mosca 52",
+				new SimpleDateFormat("yyyy/MM/dd").parse("2023/02/20"));
+		nuovoOrdine.setDataSpedizione(new SimpleDateFormat("yyyy/MM/dd").parse("2022/11/11"));
+		ordineService.inserisciNuovo(nuovoOrdine);
+		/* controllo inserimento effettuato correttamente */
+		if (nuovoOrdine.getId() == null)
+			throw new RuntimeException("testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese: FALLITO inserimento ordine non avvenuto");
+
+		/* creazione e inserimento ordine in DB */
+		Ordine nuovoOrdine2 = new Ordine("Gigi Buffon", "Via mosca 52",
+				new SimpleDateFormat("yyyy/MM/dd").parse("2023/02/20"));
+		nuovoOrdine2.setDataSpedizione(new SimpleDateFormat("yyyy/MM/dd").parse("2022/11/12"));
+		ordineService.inserisciNuovo(nuovoOrdine2);
+		/* controllo inserimento effettuato correttamente */
+		if (nuovoOrdine2.getId() == null)
+			throw new RuntimeException("testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese: FALLITO inserimento ordine non avvenuto");
+
+		/* creazione e inserimento articolo in DB */
+		Articolo nuovoArticolo = new Articolo("articolo1", "numeroSeriale1", 21,
+				new SimpleDateFormat("yyyy/MM/dd").parse("2023/01/01"), ordineService.caricaSingoloElemento(nuovoOrdine.getId()));
+		articoloService.inserisciNuovo(nuovoArticolo);
+		/* controllo inserimento effettuato correttamente */
+		if (nuovoArticolo.getId() == null)
+			throw new RuntimeException("testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese: FALLITO inserimento articolo non avvenuto");
+
+		/* creazione e inserimento articolo in DB */
+		Articolo nuovoArticolo2 = new Articolo("articolo2", "numeroSeriale2", 17,
+				new SimpleDateFormat("yyyy/MM/dd").parse("2023/01/01"), ordineService.caricaSingoloElemento(nuovoOrdine2.getId()));
+		articoloService.inserisciNuovo(nuovoArticolo2);
+		/* controllo inserimento effettuato correttamente */
+		if (nuovoArticolo2.getId() == null)
+			throw new RuntimeException("testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese: FALLITO inserimento articolo non avvenuto");
+		
+		/* creazione e inserimento categoria */
+		Categoria nuovaCategoria = new Categoria("descrizione1","codice1");
+		categoriaService.inserisciNuovo(nuovaCategoria);
+		/* controllo inserimento effettuato correttamente */
+		if(nuovaCategoria.getId() == null)
+			throw new RuntimeException("testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese: FALLITO inserimento categoria non riuscito");
+	
+		/* creazione e inserimento categoria */
+		Categoria nuovaCategoria2 = new Categoria("descrizione1","codice2");
+		categoriaService.inserisciNuovo(nuovaCategoria2);
+		/* controllo inserimento effettuato correttamente */
+		if(nuovaCategoria2.getId() == null)
+			throw new RuntimeException("testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese: FALLITO inserimento categoria non riuscito");
+	
+		/* primo collegamento articolo-categoria */
+		categoriaService.aggiungiArticolo(nuovaCategoria, nuovoArticolo);
+		/* controllo aggiunta effettuata correttamente */
+		Categoria categoriaReloaded = categoriaService.caricaSingoloElementoEager(nuovaCategoria.getId());
+		if(categoriaReloaded.getArticoli().isEmpty())
+			throw new RuntimeException("testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese: FALLITO record non collegati");
+
+		/* secondo collegamento articolo-categoria */
+		categoriaService.aggiungiArticolo(nuovaCategoria2, nuovoArticolo2);
+		/* controllo aggiunta effettuata correttamente */
+		Categoria categoriaReloaded2 = categoriaService.caricaSingoloElementoEager(nuovaCategoria.getId());
+		if(categoriaReloaded2.getArticoli().isEmpty())
+			throw new RuntimeException("testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese: FALLITO record non collegati");
+	
+		Date dataInput = new SimpleDateFormat("yyyy/MM/dd").parse("2022/11/12");
+		if(categoriaService.trovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese(dataInput).size() < 1)
+			throw new RuntimeException("testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese: FALLITO risultato errato");
+		
+		/* rimozione articolo */
+		articoloService.disassocia(nuovoArticolo.getId());
+		articoloService.disassocia(nuovoArticolo2.getId());
+		articoloService.rimuovi(nuovoArticolo.getId());
+		articoloService.rimuovi(nuovoArticolo2.getId());
+	
+		/* rimozione ordine */
+		ordineService.rimuovi(nuovoOrdine.getId());
+		ordineService.rimuovi(nuovoOrdine2.getId());
+		
+		/* rimozione categoria */
+		categoriaService.rimuovi(nuovaCategoria.getId());
+		categoriaService.rimuovi(nuovaCategoria2.getId());
+		
+		System.out.println("-------------testTrovaTuttiIcodiciDiCategorieDiOrdiniEffettuatiInUnDatoMese PASSED-----------");
 	}
 }

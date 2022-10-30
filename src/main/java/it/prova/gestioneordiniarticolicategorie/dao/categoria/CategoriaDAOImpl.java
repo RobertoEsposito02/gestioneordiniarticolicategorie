@@ -1,5 +1,6 @@
 package it.prova.gestioneordiniarticolicategorie.dao.categoria;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -90,8 +91,19 @@ public class CategoriaDAOImpl implements CategoriaDAO {
 
 	@Override
 	public Long findTheTotalSumOfTheArticoliDiUnaCategoria(Categoria categoria) throws Exception {
-		TypedQuery<Long> query = entityManager.createQuery("select sum(a.prezzoSingolo) from Articolo a join a.categorie c where c = :categoria", Long.class);
+		TypedQuery<Long> query = entityManager.createQuery(
+				"select sum(a.prezzoSingolo) from Articolo a join a.categorie c where c = :categoria", Long.class);
 		query.setParameter("categoria", categoria);
 		return query.getSingleResult().longValue();
+	}
+
+	@Override
+	public List<String> findAllCodiciDistintiDiCategorieDiOrdinEffettuatiInUnMese(Date date) throws Exception {
+		TypedQuery<String> query = entityManager.createQuery(
+				"select distinct c.codice from Categoria c join c.articoli a join a.ordine o where month(o.dataSpedizione) =  month(:mese) and year(o.dataSpedizione) = year(:anno)",
+				String.class);
+		query.setParameter("mese", date);
+		query.setParameter("anno", date);
+		return query.getResultList();
 	}
 }
