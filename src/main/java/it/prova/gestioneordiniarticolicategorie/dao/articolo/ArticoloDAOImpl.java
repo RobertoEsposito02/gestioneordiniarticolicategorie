@@ -77,4 +77,11 @@ public class ArticoloDAOImpl implements ArticoloDAO {
 		query.setParameter("nomedestinatario", ordine.getNomeDestinatario());
 		return query.getSingleResult().longValue();
 	}
+
+	@Override
+	public List<Articolo> findAllArticoliDiUnOrdineCheHaDataSpedizioneSuperioreADataScadenza() throws Exception {
+		TypedQuery<Articolo> query = entityManager.createQuery(
+				"select a from Articolo a join a.ordine o where o.dataScadenza < o.dataSpedizione", Articolo.class);
+		return query.getResultList();
+	}
 }

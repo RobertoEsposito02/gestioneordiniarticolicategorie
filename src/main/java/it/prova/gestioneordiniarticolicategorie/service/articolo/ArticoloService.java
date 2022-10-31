@@ -9,24 +9,26 @@ import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
 public interface ArticoloService {
 	public void setArticoloDAO(ArticoloDAO articoloDAO);
-	
+
 	public List<Articolo> listAll() throws Exception;
-	
+
 	public Articolo caricaSingoloElemento(Long id) throws Exception;
-	
+
 	public void aggiorna(Articolo articoloInstance) throws Exception;
 
 	public void inserisciNuovo(Articolo articoloInstance) throws Exception;
 
 	public void rimuovi(Long idArticolo) throws Exception;
-	
+
 	public void collegaOrdine(Ordine ordine, Articolo articolo) throws Exception;
-	
+
 	public void aggiungiCategoria(Categoria categoria, Articolo articolo) throws Exception;
-	
+
 	public void disassocia(Long idArticolo) throws Exception;
-	
+
 	public Articolo caricaSingoloElementoEager(Long idLong) throws Exception;
-	
+
 	public Long trovaIlTotaleDeiPrezziDiArticoliDiUnDestinatario(Ordine ordine) throws Exception;
+
+	public List<Articolo> trovaTuttiGliArticoliDiUnOrdineCheHaDataSpedizioneSuperioreADataScadenza() throws Exception;
 }

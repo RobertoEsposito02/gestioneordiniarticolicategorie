@@ -31,7 +31,7 @@ public class MyServiceFactory {
 
 		return ordineServiceInstance;
 	}
-	
+
 	public static CategoriaService getCategoriaService() {
 		if (categoriaServiceInstance == null)
 			categoriaServiceInstance = new CategoriaServiceImpl();

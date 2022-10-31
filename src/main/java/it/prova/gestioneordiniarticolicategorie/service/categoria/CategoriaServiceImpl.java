@@ -11,10 +11,10 @@ import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
-public class CategoriaServiceImpl implements CategoriaService{
+public class CategoriaServiceImpl implements CategoriaService {
 
 	private CategoriaDAO categoriaDAO;
-	
+
 	@Override
 	public void setCategoriaDAO(CategoriaDAO categoriaDAO) {
 		this.categoriaDAO = categoriaDAO;
@@ -24,11 +24,11 @@ public class CategoriaServiceImpl implements CategoriaService{
 	public List<Categoria> listAll() throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
-			
+
 			categoriaDAO.setEntityManager(entityManager);
-			
+
 			return categoriaDAO.list();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -39,11 +39,11 @@ public class CategoriaServiceImpl implements CategoriaService{
 	public Categoria caricaSingoloElemento(Long id) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
-			
+
 			categoriaDAO.setEntityManager(entityManager);
-			
+
 			return categoriaDAO.get(id);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -54,11 +54,11 @@ public class CategoriaServiceImpl implements CategoriaService{
 	public Categoria caricaSingoloElementoEager(Long id) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
-			
+
 			categoriaDAO.setEntityManager(entityManager);
-			
+
 			return categoriaDAO.findByIdFetchingArticoli(id);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -139,9 +139,9 @@ public class CategoriaServiceImpl implements CategoriaService{
 
 			categoria = entityManager.merge(categoria);
 			articolo = entityManager.merge(articolo);
-			
+
 			categoria.getArticoli().add(articolo);
-			
+
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {
 			entityManager.getTransaction().rollback();
@@ -162,7 +162,7 @@ public class CategoriaServiceImpl implements CategoriaService{
 			categoriaDAO.setEntityManager(entityManager);
 
 			categoriaDAO.disissocia(idCategoria);
-			
+
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {
 			entityManager.getTransaction().rollback();
@@ -180,7 +180,7 @@ public class CategoriaServiceImpl implements CategoriaService{
 		try {
 			categoriaDAO.setEntityManager(entityManager);
 
-			return categoriaDAO.findAllOrdiniByCategoria(categoria);	
+			return categoriaDAO.findAllOrdiniByCategoria(categoria);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -196,7 +196,7 @@ public class CategoriaServiceImpl implements CategoriaService{
 		try {
 			categoriaDAO.setEntityManager(entityManager);
 
-			return categoriaDAO.findAllDistinctCategorieFromOrdine(ordine);	
+			return categoriaDAO.findAllDistinctCategorieFromOrdine(ordine);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -212,7 +212,7 @@ public class CategoriaServiceImpl implements CategoriaService{
 		try {
 			categoriaDAO.setEntityManager(entityManager);
 
-			return categoriaDAO.findTheTotalSumOfTheArticoliDiUnaCategoria(categoria);	
+			return categoriaDAO.findTheTotalSumOfTheArticoliDiUnaCategoria(categoria);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -228,7 +228,7 @@ public class CategoriaServiceImpl implements CategoriaService{
 		try {
 			categoriaDAO.setEntityManager(entityManager);
 
-			return categoriaDAO.findAllCodiciDistintiDiCategorieDiOrdinEffettuatiInUnMese(date);	
+			return categoriaDAO.findAllCodiciDistintiDiCategorieDiOrdinEffettuatiInUnMese(date);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

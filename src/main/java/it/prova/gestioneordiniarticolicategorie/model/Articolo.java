@@ -35,7 +35,7 @@ public class Articolo {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ordine_id", nullable = false)
 	private Ordine ordine;
-	
+
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "articoli")
 	private Set<Categoria> categorie = new HashSet<>();
 
@@ -105,5 +105,5 @@ public class Articolo {
 	public void setCategorie(Set<Categoria> categorie) {
 		this.categorie = categorie;
 	}
-	
+
 }

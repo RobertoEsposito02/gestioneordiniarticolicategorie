@@ -70,7 +70,7 @@ public class Categoria {
 	public void setArticoli(Set<Articolo> articoli) {
 		this.articoli = articoli;
 	}
-	
+
 	public void addToArticoli(Articolo articoloInstance) {
 		this.articoli.add(articoloInstance);
 		articoloInstance.getCategorie().add(this);
